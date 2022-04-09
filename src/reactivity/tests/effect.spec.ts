@@ -75,12 +75,14 @@ describe('effect', () => {
     // 那么我们其实调用stop的时候，去把对应的dep里面的effect删除即可
     // 后面再手动调用runner的时候，再给这个effect加回去
     stop(runner);
+    // 这里需要优化，如果这样写obj.prop++，其实拆开看就是obj.prop = obj.prop+1,那么会先get，再set，在get的时候又会把依赖收集进去了
     obj.prop = 3;
+    obj.prop++;
     expect(dummy).toBe(2);
 
     // 当手动调用runner的时候，仍然还是可以触发fn
     runner();
-    expect(dummy).toBe(3);
+    expect(dummy).toBe(4);
   })
   it('onStop', ()=>{
     const obj = reactive({

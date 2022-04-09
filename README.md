@@ -62,3 +62,18 @@ tsconfig的lib:[],要把DOM和es6加上，否则写new Proxy会报错
   使用isReactive可以判断当前数据是否是响应式的，readonly就不是响应式的
   那么我们可以去proxy的get里面去做判断，如果读取'is_reactive'值的话，我们就把它是否响应式的结果返回出去
   isReadonly方法同理
+
+9. 优化stop功能
+  在之前的代码版本，stop之后，如果obj.prop++,又会触发fn执行，导致依赖被触发。
+
+  因为obj.prop++ => obj.prop = obj.prop+1;
+  会先执行get，然后触发track，由于我们什么也没做，这里就又把依赖收集了一遍。
+  然后obj.prop+1,触发set，触发trigger，然后顺利成章的就更新了。
+
+  那么我们需要做几个改变：
+  1. 在track方法里，要做判断，知道显示是否能够去收集依赖。
+  2. 是否能够收集依赖的标识需要在effect.run里面设置。因为触发get都是在fn中，外面有一层effect()包裹
+    是由于执行了effect.run才去执行fn的，所以我们要再run里面去给出shouldTrack标识。在执行fn前是true，执行完则置为false。另外，需要判断如果isActive为true那么代表是stop过的runner，那么就直接执行fn并返回，这样shouldTrack就为false，一来就不会被收集起来。
+  
+  其实上面的改变，就是想控制，你初次effect.run或者后序执行runner，我让你收集依赖，而你自己去get，就不让你收集依赖了。
+  并且由于set导致的run被触发要去收集依赖这个口子也给收住。

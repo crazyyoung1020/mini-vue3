@@ -1,4 +1,7 @@
 import {extend} from '../shared'
+
+let activeEffect;
+let shouldTrack;
 class ReactiveEffect {
   deps = [];
   private _fn: any;
@@ -10,8 +13,23 @@ class ReactiveEffect {
     this.scheduler = scheduler;
   }
   run() {
+    // 当变量被stop清理过依赖后，this.active就为false了
+    // 所以我们可以把这个当做一个条件来去控制shouldTrack
+    // 这里要注意，每次effect.run，我们都会去执行一遍fn，执行fn的过程中会触发get，导致把依赖再次收集
+    // 这也是为什么，我们需要在这里判断active，因为stop之后，不希望再次被收集
+    // 所以加了这个判断，stop之后，再触发set导致run，也不会去执行fn了。
+    if(!this.active){
+      return this._fn();
+    }
+    // 可以收集依赖 
+    shouldTrack = true;
     activeEffect = this;
-    return this._fn();
+
+    const result = this._fn();
+    // 重置，关闭依赖收集
+    // 上面执行fn，会去做依赖收集，到这里收集完了，就把开关关掉
+    shouldTrack = false;
+    return result;
   }
   stop(){
     // 如果目前当前的effect已经清空过了，那么外面再调用runner就不用再执行了
@@ -33,6 +51,8 @@ function cleanupEffect(effect){
   effect.deps.forEach((dep: any)=>{
     dep.delete(effect);
   })
+  // 把effect的deps里面所有的dep包含的自己都删除之后，这个deps也可以清掉了。
+  effect.deps.length = 0;
 }
 
 // targetMap是总的管家，它的结构跟observe观察的data结构是一样的
@@ -44,6 +64,8 @@ const targetMap = new Map();
 // track 是用来做依赖收集的
 export function track(target, key) {
   // target -> key -> dep
+  if(!isTracking()) return ;
+
   let depsMap = targetMap.get(target);
   // 如果targetMap下没有这个depsMap，那么就创建一个放进去
   if (!depsMap) {
@@ -56,8 +78,8 @@ export function track(target, key) {
     depsMap.set(key, dep);
   }
 
-  // 下面的问题已解决，确实就是activeEffect有可能为空，做个非空判断就好了。
-  if(!activeEffect) return;
+  if(dep.has(activeEffect)) return ;
+
   // 这一句是依赖收集，把effect收集到对应的dep里
   dep.add(activeEffect);
   // 这里反向收集一下，把dep放到effect里，effect里面也会记录自己对应的所有dep
@@ -66,6 +88,14 @@ export function track(target, key) {
   // 我这里为了不报错，先做一个非空断言
   
   activeEffect.deps.push(dep);
+}
+
+function isTracking(){
+  // 上面track中所说的问题已解决，确实就是activeEffect有可能为空，做个非空判断就好了。
+  // if(!activeEffect) return;
+  // 我们在这个用一个shouldTrack来控制我们到底要不要取收集依赖，以防obj.prop++这样导致被stop的runner仍然会触发effect的fn
+  // if(!shouldTrack) return;
+  return shouldTrack && activeEffect !== undefined;
 }
 
 export function trigger(target, key) {
@@ -82,7 +112,6 @@ export function trigger(target, key) {
   }
 }
 
-let activeEffect;
 export function effect(fn, options: any = {}) {
   // fn是传进来的回调函数，里面会去访问响应式数据，并触发依赖收集
   // 接受第二个参数options，然后把scheduler拿下来
