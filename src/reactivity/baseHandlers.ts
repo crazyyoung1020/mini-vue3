@@ -12,6 +12,8 @@ function createGetter(isReadonly = false){
     // 如果来读取这个字段，那么就直接返回它是否reactive就行了
     if( key === ReactiveFlags.IS_REACTIVE){
       return !isReadonly;
+    } else if( key === ReactiveFlags.IS_READONLY){
+      return isReadonly;
     }
     // 获取对象的对应key值
     const res = Reflect.get(target, key);
