@@ -1,6 +1,6 @@
 class ReactiveEffect {
   private _fn: any;
-  constructor(fn) {
+  constructor(fn, public scheduler?) {
     this._fn = fn;
   }
   run() {
@@ -35,24 +35,27 @@ export function track(target, key) {
   // const dep = new Set();
 }
 
-
-
-export function trigger(target, key){
+export function trigger(target, key) {
   let depsMap = targetMap.get(target);
   let dep = depsMap.get(key);
 
   // 这里拿出来的dep里面，存放是多个依赖的对应的那个effect传入的回调函数fn。
-  for ( const effect of dep ) {
-    effect.run();
+  for (const effect of dep) {
+    if (effect.scheduler) {
+      effect.scheduler();
+    } else {
+      effect.run();
+    }
   }
 }
 
 let activeEffect;
-export function effect(fn) {
+export function effect(fn, options: any = {}) {
   // fn是传进来的回调函数，里面会去访问响应式数据，并触发依赖收集
+  // 接受第二个参数options，然后把scheduler拿下来
 
   // 我们把这个effect抽离一个类出来
-  const _effect = new ReactiveEffect(fn);
+  const _effect = new ReactiveEffect(fn, options.scheduler);
 
   _effect.run();
   // 这里把run方法return出去，外面就能到runner了
