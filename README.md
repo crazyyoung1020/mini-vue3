@@ -87,3 +87,6 @@ tsconfig的lib:[],要把DOM和es6加上，否则写new Proxy会报错
 11. 实现shallowReadonly
 
   shallow的意思是只对第一层属性做处理，内层的就不做了，那shallowReadOnly就是，只对第一层做readonly处理，内层不处理
+
+12. 实现isProxy
+  判断当前对象是否为代理，那么就是判断它是isReactive或者isReadonly即可。
