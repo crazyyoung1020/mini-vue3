@@ -77,3 +77,8 @@ tsconfig的lib:[],要把DOM和es6加上，否则写new Proxy会报错
   
   其实上面的改变，就是想控制，你初次effect.run或者后序执行runner，我让你收集依赖，而你自己去get，就不让你收集依赖了。
   并且由于set导致的run被触发要去收集依赖这个口子也给收住。
+
+10. reactive和readonly嵌套的逻辑实现
+  递归调用一下就好了，在reactive方法里面，我们是抽离了baseHandlers，在里面要判断一下isObject那么要递归调用reactive。
+
+  这里要注意，proxy虽然可以直接代理对象，但只是我们不需要去遍历每一个属性，像defineProperty那样一个一个去劫持，可是如果子属性有对象或数组，我们仍然需要递归去代理。
