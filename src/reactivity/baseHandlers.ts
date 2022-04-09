@@ -8,6 +8,10 @@ const readonlyGet = createGetter(true);
 // 把get方法抽离出来
 function createGetter(isReadonly = false){
   return function get(target, key){
+    // 如果来读取这个字段，那么就直接返回它是否reactive就行了
+    if( key === 'is_reactive'){
+      return !isReadonly;
+    }
     // 获取对象的对应key值
     const res = Reflect.get(target, key);
     if(!isReadonly){
