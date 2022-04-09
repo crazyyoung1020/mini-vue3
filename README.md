@@ -26,3 +26,9 @@ npm i jest @types/jest -D 引入jest和对应的ts申明文件
 新建babel.config.js
 
 安装npm i @babel/preset-typescript -D，让babel可以解析typescript
+
+2. 开发effect和reactive的单测
+
+tsconfig的lib:[],要把DOM和es6加上，否则写new Proxy会报错
+
+测试驱动开发TDD，真的很爽，这边配合vscode的jest插件，在编辑器里直接断点调试
