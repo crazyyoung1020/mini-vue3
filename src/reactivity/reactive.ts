@@ -1,4 +1,4 @@
-import { mutableHandlers, readonlyHandlers } from './baseHandlers';
+import { mutableHandlers, readonlyHandlers, shallowReadonlyHandlers } from './baseHandlers';
 
 // 创建枚举，这里一个可维护性好，二是担心和用户自己的属性冲突了
 export const enum ReactiveFlags {
@@ -7,11 +7,15 @@ export const enum ReactiveFlags {
 }
 
 export function reactive(raw){
-  return createActiveObject(raw, mutableHandlers);
+  return createReactiveObject(raw, mutableHandlers);
 }
 
 export function readonly(raw){
-  return createActiveObject(raw, readonlyHandlers);
+  return createReactiveObject(raw, readonlyHandlers);
+}
+
+export function shallowReadonly(raw){
+  return createReactiveObject(raw, shallowReadonlyHandlers);
 }
 
 export function isReactive(value){
@@ -23,6 +27,6 @@ export function isReadonly(value){
   return !!value[ReactiveFlags.IS_READONLY]; 
 }
 
-function createActiveObject(raw: any, baseHandlers){
+function createReactiveObject(raw: any, baseHandlers){
   return new Proxy(raw, baseHandlers);
 }

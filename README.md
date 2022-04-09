@@ -82,3 +82,8 @@ tsconfig的lib:[],要把DOM和es6加上，否则写new Proxy会报错
   递归调用一下就好了，在reactive方法里面，我们是抽离了baseHandlers，在里面要判断一下isObject那么要递归调用reactive。
 
   这里要注意，proxy虽然可以直接代理对象，但只是我们不需要去遍历每一个属性，像defineProperty那样一个一个去劫持，可是如果子属性有对象或数组，我们仍然需要递归去代理。
+
+
+11. 实现shallowReadonly
+
+  shallow的意思是只对第一层属性做处理，内层的就不做了，那shallowReadOnly就是，只对第一层做readonly处理，内层不处理
