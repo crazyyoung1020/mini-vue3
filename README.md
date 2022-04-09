@@ -54,3 +54,6 @@ tsconfig的lib:[],要把DOM和es6加上，否则写new Proxy会报错
 
   同时提供一个onStop回调，在effect(fn,{onStop})的第二个入参里面
   当我们执行stop的时候，会去清空掉effect对应的deps里面所有dep收集的当前的effect，清空完成则执行onStop
+
+7. 实现reactive下的readonly功能
+  用readonly创建的响应式对象，无法被set，那么也就不需要去track捕获了
