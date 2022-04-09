@@ -57,3 +57,7 @@ tsconfig的lib:[],要把DOM和es6加上，否则写new Proxy会报错
 
 7. 实现reactive下的readonly功能
   用readonly创建的响应式对象，无法被set，那么也就不需要去track捕获了
+
+8. 实现isReactive方法
+  使用isReactive可以判断当前数据是否是响应式的，readonly就不是响应式的
+  那么我们可以去proxy的get里面去做判断，如果读取'is_reactive'值的话，我们就把它是否响应式的结果返回出去
