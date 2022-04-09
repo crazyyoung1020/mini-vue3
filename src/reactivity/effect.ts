@@ -5,7 +5,7 @@ class ReactiveEffect {
   }
   run() {
     activeEffect = this;
-    this._fn();
+    return this._fn();
   }
 }
 
@@ -55,4 +55,8 @@ export function effect(fn) {
   const _effect = new ReactiveEffect(fn);
 
   _effect.run();
+  // 这里把run方法return出去，外面就能到runner了
+  // 然后让run执行结束把结果也return出去
+  // 并且这里涉及到this指针的问题，我们把this绑定一下
+  return _effect.run.bind(_effect);
 }
