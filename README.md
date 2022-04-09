@@ -11,6 +11,8 @@ simplified vue3
     - index.ts
 ### 开发日志
 
+1. 项目初始化，单元测试环境配置
+
 npm init -y 创建空羡慕
 
 tsc --init 初始化tsconfig.json
