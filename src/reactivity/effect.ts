@@ -77,20 +77,21 @@ export function track(target, key) {
     dep = new Set();
     depsMap.set(key, dep);
   }
+  trackEffects(dep);
+}
 
+export function trackEffects(dep){
   if(dep.has(activeEffect)) return ;
-
   // 这一句是依赖收集，把effect收集到对应的dep里
   dep.add(activeEffect);
   // 这里反向收集一下，把dep放到effect里，effect里面也会记录自己对应的所有dep
   // 这里为了让effect可以去执行stop，把自己从对应的dep中删掉
   // 这里有一点问题，如果外面没有调用effect()，那么_effect就是undefined，这里activeEffect也是undefined，那么这里会报错
   // 我这里为了不报错，先做一个非空断言
-  
   activeEffect.deps.push(dep);
 }
 
-function isTracking(){
+export function isTracking(){
   // 上面track中所说的问题已解决，确实就是activeEffect有可能为空，做个非空判断就好了。
   // if(!activeEffect) return;
   // 我们在这个用一个shouldTrack来控制我们到底要不要取收集依赖，以防obj.prop++这样导致被stop的runner仍然会触发effect的fn
@@ -101,7 +102,10 @@ function isTracking(){
 export function trigger(target, key) {
   let depsMap = targetMap.get(target);
   let dep = depsMap.get(key);
+  triggerEffects(dep);
+}
 
+export function triggerEffects(dep){
   // 这里拿出来的dep里面，存放是多个依赖的对应的那个effect传入的回调函数fn。
   for (const effect of dep) {
     if (effect.scheduler) {

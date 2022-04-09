@@ -90,3 +90,17 @@ tsconfig的lib:[],要把DOM和es6加上，否则写new Proxy会报错
 
 12. 实现isProxy
   判断当前对象是否为代理，那么就是判断它是isReactive或者isReadonly即可。
+
+13. 实现ref
+
+  TODO，如下待验证
+  TODO，1.正常的reactive数据，我设置一个新的值和原来的值一样的时候，会重新触发effect吗
+  TODO, 2. 我们实现的ref，当设置相同的值的时候不会触发effect更新，但是如果设置一个结构和值相同但是引用不同的对象呢？
+  TODO， 如，我们原来a.value = {count:1},现在再设置一遍a.value = {count:1},这两个对象值一样，但是引用不同，会触发effect么？
+
+  为什么要有这个ref呢，因为我们proxy是需要传入一个对象，它是来代理对象的。
+  而如果我们现在是一个单值如1,'1',true这种，那么用proxy就不好使了。
+  所以我们需要推出这么一个ref，然后用一个对象来把这个单值报错一下。
+  结构是{value:1},这个1就是传进来的单值，然后访问变量就多了一层value
+  所以就有let a = ref(1);a.value = 1; 
+  当然我们也要支持能够传对象进来，做到兼容，但如果是对象建议直接使用reactive
