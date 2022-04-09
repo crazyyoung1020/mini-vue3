@@ -8,6 +8,7 @@ describe('readonly',()=>{
     expect(wrapped).not.toBe(original);
     expect(wrapped.foo).toBe(1);
     expect(isReadonly(wrapped)).toBe(true);
+    expect(isReadonly(wrapped.bar)).toBe(true);
     expect(isReadonly('123')).toBe(false);
   })
 })

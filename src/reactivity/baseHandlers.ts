@@ -1,6 +1,7 @@
 import { track, trigger } from './effect'
 import { ReactiveFlags } from './reactive';
-
+import { isObject } from '../shared';
+import { reactive, readonly } from './reactive';
 // 这里创建一遍get之后，后序就都用这个get了，不需要每次都创建，所以抽离出来
 const get = createGetter();
 const set = createSetter();
@@ -17,6 +18,12 @@ function createGetter(isReadonly = false){
     }
     // 获取对象的对应key值
     const res = Reflect.get(target, key);
+
+    // 看看res是不是object
+    if(isObject(res)){
+      // 这里等于是递归了一波
+      return isReadonly ? readonly(res) : reactive(res);
+    }
     if(!isReadonly){
       // 不是readonly，我们采取收集依赖
       track(target,key);
