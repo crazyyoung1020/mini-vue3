@@ -1,5 +1,10 @@
 import { mutableHandlers, readonlyHandlers } from './baseHandlers';
 
+// 创建枚举，这里一个可维护性好，二是担心和用户自己的属性冲突了
+export const enum ReactiveFlags {
+  IS_REACTIVE = '__v_isReactive'
+}
+
 export function reactive(raw){
   return createActiveObject(raw, mutableHandlers);
 }
@@ -9,7 +14,8 @@ export function readonly(raw){
 }
 
 export function isReactive(value){
-  return value['is_reactive'];
+  // 这里转boolean是因为如果当前值不是一个proxy，那么就不会进get方法，那么读取这个属性就是undefined，所以需要转一下，返回false
+  return !!value[ReactiveFlags.IS_REACTIVE];
 }
 
 function createActiveObject(raw: any, baseHandlers){

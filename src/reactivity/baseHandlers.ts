@@ -1,4 +1,5 @@
 import { track, trigger } from './effect'
+import { ReactiveFlags } from './reactive';
 
 // 这里创建一遍get之后，后序就都用这个get了，不需要每次都创建，所以抽离出来
 const get = createGetter();
@@ -9,7 +10,7 @@ const readonlyGet = createGetter(true);
 function createGetter(isReadonly = false){
   return function get(target, key){
     // 如果来读取这个字段，那么就直接返回它是否reactive就行了
-    if( key === 'is_reactive'){
+    if( key === ReactiveFlags.IS_REACTIVE){
       return !isReadonly;
     }
     // 获取对象的对应key值
