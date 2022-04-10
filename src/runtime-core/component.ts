@@ -2,7 +2,8 @@
 export function createComponentInstance(vnode){
   const component = {
     vnode,
-    type: vnode.type
+    type: vnode.type,
+    setupState: {}
   };
   return component;
 }
@@ -19,6 +20,17 @@ export function setupComponent(instance){
 function setupStatefulComponent(instance){
   // 这里实例上的type是我们在前面处理了以下，挂载到实例上来的
   const Component = instance.type;
+
+  // 创建一个代理挂载到实例上，方便用户访问setupState
+  instance.proxy = new Proxy({},{
+    get(target, key){
+      // setupState
+      const { setupState } = instance;
+      if(key in setupState){
+        return setupState[key];
+      }
+    }
+  })
 
   // 从component这个options配置中解析出用户的setup方法
   const { setup } = Component;

@@ -69,8 +69,10 @@ function mountComponent(vnode, container){
 }
 
 function setupRenderEffects(instance, container){
+  // 从instance中取出proxy，然后将render的this绑定为这个代理对象
+  const { proxy } = instance;
   // 执行render函数得到虚拟dom
-  const subTree = instance.render();
+  const subTree = instance.render.call(proxy);
 
   // 到这里位置，就通过调用用户传入的render函数，拿到了虚拟节点了
   // 接着就可以 vnode -> patch
