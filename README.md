@@ -145,3 +145,5 @@ tsconfig的lib:[],要把DOM和es6加上，否则写new Proxy会报错
   从render -> patch -> element or component -> processElement -> 如果element中有component则仍需要继续patch
 
 20. 实现render函数里面的this绑定
+  在执行setup并挂载setupState的时候，去创建一个proxy组件代理对象一起挂载到组件实例上，方便后序可以直接通过this.$el、$data等直接访问。
+  这个proxy要在组件挂载的时候，执行用户render函数得到vnode的时候绑定到render的this指向上即可。
