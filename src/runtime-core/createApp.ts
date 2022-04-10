@@ -1,3 +1,4 @@
+import { render } from "./render";
 import { createVNode } from "./vnode";
 
 export function createApp(rootComponent){
@@ -7,7 +8,7 @@ export function createApp(rootComponent){
       // 后序所有的逻辑操作，都会基于vnode做处理
       // component -> vnode
       const vnode = createVNode(rootComponent);
+      render(vnode, rootContainer);
     }
   }
-
 }
