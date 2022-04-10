@@ -143,3 +143,5 @@ tsconfig的lib:[],要把DOM和es6加上，否则写new Proxy会报错
 19. 实现element主流程
 
   从render -> patch -> element or component -> processElement -> 如果element中有component则仍需要继续patch
+
+20. 实现render函数里面的this绑定

@@ -27,7 +27,9 @@ function processElement(vnode, container){
 }
 
 function mountElement(vnode, container){
-  const el = document.createElement(vnode.type);
+  // 这里将创建的节点保存在vnode一份,便于其他地方要拿出来操作
+  // 这里的vnode是element的，比如div
+  const el =(vnode.el = document.createElement(vnode.type));
 
   const { children, props } = vnode;
   // 这里children有可能是string，也有可能是array
@@ -65,10 +67,10 @@ function mountComponent(vnode, container){
   // 去处理组件实例，执行setup方法，并挂载相应的state到实例上
   setupComponent(instance);
   // 上一步setup结束后，实例上就会挂载render函数，执行render函数得到虚拟dom
-  setupRenderEffects(instance, container);
+  setupRenderEffects(instance, vnode, container);
 }
 
-function setupRenderEffects(instance, container){
+function setupRenderEffects(instance, vnode, container){
   // 从instance中取出proxy，然后将render的this绑定为这个代理对象
   const { proxy } = instance;
   // 执行render函数得到虚拟dom
@@ -83,4 +85,8 @@ function setupRenderEffects(instance, container){
   // 那么这个虚拟dom我们仍然需要对他去做初始化或者更新处理，所以需要递归的调用一下
   // 如果subTree里面没有组件了，就不会往下再递归了，如果还有组件，那么还会往下去递归创建并挂载
   patch(subTree, container)
+
+  // 这里所有的子树都已经创建完了，那么把这个子树的el给挂载到我们组件对应的el属性上
+  // 这样在外部其他地方就可以通过this.$el访问到我们的组件根节点了
+  vnode.el = subTree.el;
 }

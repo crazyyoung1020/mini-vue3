@@ -1,9 +1,11 @@
+import { PublicInstanceProxyHandlers } from "./componentPublicInstance";
 
 export function createComponentInstance(vnode){
   const component = {
     vnode,
     type: vnode.type,
-    setupState: {}
+    setupState: {},
+    el: null
   };
   return component;
 }
@@ -22,15 +24,7 @@ function setupStatefulComponent(instance){
   const Component = instance.type;
 
   // 创建一个代理挂载到实例上，方便用户访问setupState
-  instance.proxy = new Proxy({},{
-    get(target, key){
-      // setupState
-      const { setupState } = instance;
-      if(key in setupState){
-        return setupState[key];
-      }
-    }
-  })
+  instance.proxy = new Proxy({_:instance},PublicInstanceProxyHandlers)
 
   // 从component这个options配置中解析出用户的setup方法
   const { setup } = Component;
