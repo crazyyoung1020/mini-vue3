@@ -147,3 +147,7 @@ tsconfig的lib:[],要把DOM和es6加上，否则写new Proxy会报错
 20. 实现render函数里面的this绑定
   在执行setup并挂载setupState的时候，去创建一个proxy组件代理对象一起挂载到组件实例上，方便后序可以直接通过this.$el、$data等直接访问。
   这个proxy要在组件挂载的时候，执行用户render函数得到vnode的时候绑定到render的this指向上即可。
+
+21. shapeFlag优化
+
+  我们之前判断节点类型都是通过type是否string或者isObject这样来判断的。可以通过位运算的方式做优化，性能会由于直接用对象取值比较。
