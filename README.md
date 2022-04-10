@@ -125,3 +125,9 @@ tsconfig的lib:[],要把DOM和es6加上，否则写new Proxy会报错
   4. 核心思想就一是一个缓存锁，第一次读取值的时候会去计算，然后把锁锁上
   5. 当依赖发生变更的时候会触发set，那么我们这个effect也会收到，而我们配置了scheduler，所以触发set会触发我们scheduler，然后把锁打开。
   6. 下次用户再读取的时候，锁是开的，所以又可以计算了。
+
+17. 实现component初始化流程
+
+  主要逻辑都在runtime-core里
+  用户调用createApp(App).mount('#app'),去开始初始化流程，根据传入的配置项生成vnode，然后调用render去patch比对
+  我们这里就简化流程，先实现一个component的初始化，先不考虑元素节点的。
