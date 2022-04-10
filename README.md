@@ -131,3 +131,11 @@ tsconfig的lib:[],要把DOM和es6加上，否则写new Proxy会报错
   主要逻辑都在runtime-core里
   用户调用createApp(App).mount('#app'),去开始初始化流程，根据传入的配置项生成vnode，然后调用render去patch比对
   我们这里就简化流程，先实现一个component的初始化，先不考虑元素节点的。
+
+18. rollup打包配置
+  rollup是天然支持esm的
+  npm i rollup -D
+  npm i @rollup/plugin-typescript -D,让rollup能够解析typescript
+  npm i tslib -D,这个我没装，好像也没啥问题
+  rollup -c rollup.config.js,指定配置文件来打包
+  修改package.json的main和module，分别指向两个打包产物的路径

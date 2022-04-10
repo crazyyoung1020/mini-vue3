@@ -45,8 +45,6 @@ function handleSetupResult(instance, setupResult){
 function finishComponentSetup(instance){
   const Component = instance.type;
 
-  // TODO 这句没看懂，用户没传render，那这里赋值的这个Component.render不就是undefined？
-  if(!Component.render){
-    instance.render =Component.render;
-  }
+  // 假设用户一定会传render函数进来，不传那就报错
+  instance.render =Component.render;
 }

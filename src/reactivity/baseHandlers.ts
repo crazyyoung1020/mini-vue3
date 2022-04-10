@@ -1,6 +1,6 @@
 import { track, trigger } from './effect'
 import { ReactiveFlags } from './reactive';
-import { extend, isObject } from '../shared';
+import { extend, isObject } from '../shared/index';
 import { reactive, readonly } from './reactive';
 // 这里创建一遍get之后，后序就都用这个get了，不需要每次都创建，所以抽离出来
 const get = createGetter();
