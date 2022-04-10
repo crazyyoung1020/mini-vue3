@@ -109,3 +109,9 @@ tsconfig的lib:[],要把DOM和es6加上，否则写new Proxy会报错
   isRef用来判断对象是否是一个ref。我们可以在ref类里添加一个标识，用这个标识来判断。
   unRef则是用来获取ref对象的value
   TODO 了解一下unRef真正的逻辑，就是要获取value么？还是说将一个ref转换回正常的值？
+
+15. 实现proxyRef
+
+  当一个对象里面有ref子属性的时候，将这个对象转为proxyRef，那么访问ref就可以不用去通过value访问了
+
+  这个使用场景，比如我们setup里面返回一个对象，里面有ref属性，而在template模板里面可以直接使用ref，而不用去.value，就是内部做了这个处理。

@@ -54,3 +54,23 @@ export function unRef(ref){
   // 判断是否是ref，是的话则返回value，不是则返回本身
   return isRef(ref) ? ref.value : ref;
 }
+
+export function proxyRefs(objectWithRefs){
+  return new Proxy(objectWithRefs, {
+    get(target, key){
+      // get的时候，如果是一个ref，那么就直接返回target.key.value
+      // 如果不是ref，则直接返回target.key
+      // 这不是就是我们之前做的unRef的功能么
+      return unRef(Reflect.get(target, key));
+    },
+    set(target, key, value){
+      // 如果目标属性时ref，并且赋值过来的不是ref，那么就用这个值去替换目标ref的value属性
+      if(isRef(target[key]) && !isRef(value)){
+        return target[key].value = value;
+      } else {
+      // 否则可能的情况是，目标不是ref，那么直接赋值。如果目标是ref，且value也是ref，那么也是直接赋值替换
+        return Reflect.set(target, key, value)
+      }
+    }
+  })
+}
