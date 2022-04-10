@@ -139,3 +139,7 @@ tsconfig的lib:[],要把DOM和es6加上，否则写new Proxy会报错
   npm i tslib -D,这个我没装，好像也没啥问题
   rollup -c rollup.config.js,指定配置文件来打包
   修改package.json的main和module，分别指向两个打包产物的路径
+
+19. 实现element主流程
+
+  从render -> patch -> element or component -> processElement -> 如果element中有component则仍需要继续patch

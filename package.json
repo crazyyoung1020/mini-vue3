@@ -6,7 +6,8 @@
   "module": "lib/guide-mini-vue.esm.js",
   "scripts": {
     "test": "jest",
-    "build": "rm -rf ./lib &&  rollup -c rollup.config.js"
+    "build": "rm -rf ./lib &&  rollup -c rollup.config.js",
+    "build:watch":"rm -rf ./lib &&  rollup -c rollup.config.js --watch"
   },
   "repository": {
     "type": "git",
