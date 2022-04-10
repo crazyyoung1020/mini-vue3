@@ -12,6 +12,7 @@ export function setupComponent(instance){
   // initProps()
   // initSlots()
 
+  // 执行组件实例的setup方法，将得到的对象挂载到组件实例上
   setupStatefulComponent(instance);
 }
 
@@ -27,6 +28,7 @@ function setupStatefulComponent(instance){
     // Function or Object，而且setup执行结果可能是函数也可能是对象
     const setupResult = setup();
 
+    // 处理得到的结果，因为有可能是对象或者函数
     handleSetupResult(instance, setupResult);
   }
 }
@@ -39,6 +41,7 @@ function handleSetupResult(instance, setupResult){
     instance.setupState = setupResult;
   }
 
+  // setup结束，要将用户传入的render函数挂载到实例上
   finishComponentSetup(instance);
 }
 
