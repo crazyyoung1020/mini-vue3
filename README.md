@@ -121,4 +121,7 @@ tsconfig的lib:[],要把DOM和es6加上，否则写new Proxy会报错
   原理其实很简单，
   1. 首先要实现一个类似于ref的功能，computed类需要访问value才能访问到值。
   2. 要有缓存功能，只有当用户第一次读取value或者computed内的依赖有改变的时候，我们才能去重新计算，否则都直接返回缓存值
-  3. 我们可以直接使用ReactiveEffects类来实现computed，并且利用scheduler属性去做缓存控制
+  3. 我们可以直接使用ReactiveEffects类来实现computed，并且利用scheduler属性去做缓存控制。
+  4. 核心思想就一是一个缓存锁，第一次读取值的时候会去计算，然后把锁锁上
+  5. 当依赖发生变更的时候会触发set，那么我们这个effect也会收到，而我们配置了scheduler，所以触发set会触发我们scheduler，然后把锁打开。
+  6. 下次用户再读取的时候，锁是开的，所以又可以计算了。
