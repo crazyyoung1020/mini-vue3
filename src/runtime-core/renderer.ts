@@ -45,6 +45,20 @@ function mountElement(vnode, container){
   // 从props里面解析出属性并设置到元素里
   for(const key in props){
     const val = props[key];
+
+    // 这里是实现了一个具体的click事件的处理，可以抽离成一个通用的事件注册
+    // 通用规范，on + Event name,如onClick，onMousedown
+    // TODO 这里其实还有个问题，如果直接在自定义组件上绑定时间呢，自定义组件的相关逻辑都还没有处理
+    const isOn = (key: string) => /^on[A-Z]/.test(key);
+    // 表示属性是on开头并且第三位是大写字母，那么代表这是一个事件绑定属性
+    if(isOn(key)){
+      const event = key.slice(2).toLowerCase();
+      el.addEventListener(event, val);
+    } else {
+      el.setAttribute(key, val);
+    }
+
+
     el.setAttribute(key, val);
   }
   container.append(el);

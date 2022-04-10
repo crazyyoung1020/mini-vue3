@@ -12,7 +12,8 @@ export const App = {
       'div',
       {
         id: 'root',
-        class: ['red', 'hard']
+        class: ['red', 'hard'],
+        onClick:(e)=>{console.log(e)}
       },
       // TODO 我们还没有实现this这个功能，就先注释掉
       // 这个this，我们分析一下，需要将一个对象绑定到我们render的this上就行了，我们在component.ts里创建一个代理对象，然后绑上即可

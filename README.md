@@ -151,3 +151,6 @@ tsconfig的lib:[],要把DOM和es6加上，否则写new Proxy会报错
 21. shapeFlag优化
 
   我们之前判断节点类型都是通过type是否string或者isObject这样来判断的。可以通过位运算的方式做优化，性能会由于直接用对象取值比较。
+
+22. 实现注册事件
+  在我们处理mountElement的时候，遍历对应vnode属性的时候，将on开头的属性拿出来，截取它的事件名称，用addEventListener去绑定事件
