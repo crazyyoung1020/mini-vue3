@@ -2,7 +2,7 @@ import {extend} from '../shared'
 
 let activeEffect;
 let shouldTrack;
-class ReactiveEffect {
+export class ReactiveEffect {
   deps = [];
   private _fn: any;
   active = true; // 这个是用来记录当前的stop是否调用过

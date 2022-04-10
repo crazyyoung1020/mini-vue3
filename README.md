@@ -115,3 +115,10 @@ tsconfig的lib:[],要把DOM和es6加上，否则写new Proxy会报错
   当一个对象里面有ref子属性的时候，将这个对象转为proxyRef，那么访问ref就可以不用去通过value访问了
 
   这个使用场景，比如我们setup里面返回一个对象，里面有ref属性，而在template模板里面可以直接使用ref，而不用去.value，就是内部做了这个处理。
+
+16. 实现computed计算属性
+
+  原理其实很简单，
+  1. 首先要实现一个类似于ref的功能，computed类需要访问value才能访问到值。
+  2. 要有缓存功能，只有当用户第一次读取value或者computed内的依赖有改变的时候，我们才能去重新计算，否则都直接返回缓存值
+  3. 我们可以直接使用ReactiveEffects类来实现computed，并且利用scheduler属性去做缓存控制
