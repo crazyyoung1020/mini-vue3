@@ -5,6 +5,7 @@ class RefImpl {
   public dep;
   private _value:any;
   private _rawValue:any;
+  public __v_isRef = true;
   constructor(value){
     // 把传进来的没有处理过的value存一份，方便set的时候做数据对比
     // 因为如果是object，我们会把它转成reactive的数据，那就不能直接比较了
@@ -43,4 +44,13 @@ function trackRefValue(ref){
 
 export function ref(value){
   return new RefImpl(value);
+}
+
+export function isRef(ref){
+  return !!ref.__v_isRef;
+}
+
+export function unRef(ref){
+  // 判断是否是ref，是的话则返回value，不是则返回本身
+  return isRef(ref) ? ref.value : ref;
 }

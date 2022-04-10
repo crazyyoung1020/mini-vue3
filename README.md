@@ -104,3 +104,8 @@ tsconfig的lib:[],要把DOM和es6加上，否则写new Proxy会报错
   结构是{value:1},这个1就是传进来的单值，然后访问变量就多了一层value
   所以就有let a = ref(1);a.value = 1; 
   当然我们也要支持能够传对象进来，做到兼容，但如果是对象建议直接使用reactive
+
+14. 实现isRef和unRef
+  isRef用来判断对象是否是一个ref。我们可以在ref类里添加一个标识，用这个标识来判断。
+  unRef则是用来获取ref对象的value
+  TODO 了解一下unRef真正的逻辑，就是要获取value么？还是说将一个ref转换回正常的值？
