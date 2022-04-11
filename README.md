@@ -154,3 +154,11 @@ tsconfig的lib:[],要把DOM和es6加上，否则写new Proxy会报错
 
 22. 实现注册事件
   在我们处理mountElement的时候，遍历对应vnode属性的时候，将on开头的属性拿出来，截取它的事件名称，用addEventListener去绑定事件
+
+23. 实现props传参
+  1. 即setup函数里面能拿到一个props对象，并且是一个只读属性，实际上它是一个shallowReadonly类型
+  2. 在render函数里面能通过this访问到props
+  3. setup里面要有props，那么在我们执行setup方法的得到state的时候就传入props即可
+  4. render里面要通过this访问props，我们直到render里面的this已经绑定给instance了，那我们把props挂载到instance即可。
+  5. props可以在最开始就挂载到instance上一直往下带，方便取用
+
