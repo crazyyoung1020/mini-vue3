@@ -23,7 +23,16 @@ export const App = {
       [
         h('div', {}, 'hi,' + this.msg), 
         // 这里传入组件配置文件，和传入div这种dom节点是不一样的，前者都processComponent，后者走processElement
-        h(Foo,{ count: 1 }),
+        h(Foo,{ 
+          count: 1,
+          // 这里就是在Foo里面emit触发了add事件
+          onAdd(a, b){
+            console.log('onAdd',a,b)
+          },
+          onAddFoo(a, b){
+            console.log('onAddFoo',a, b)
+          }
+        }),
       ]
       // string类型
       // 'hi, mini-vue',

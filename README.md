@@ -162,3 +162,9 @@ tsconfig的lib:[],要把DOM和es6加上，否则写new Proxy会报错
   4. render里面要通过this访问props，我们直到render里面的this已经绑定给instance了，那我们把props挂载到instance即可。
   5. props可以在最开始就挂载到instance上一直往下带，方便取用
 
+24. 实现emit子传父
+
+  1. setup里需要有emit方法，可以让用户调用，那么在setupComponent里面执行setup的时候就要把emit传进去
+  2. 可以将内部的emit函数挂载到Component的实例上一直带下去，方便传入setup
+  3. 执行emit的时候需要去instance上找到用户注册的事件，然后触发，那这个instance可以内部通过component.emit.bind(null,component)这样去内部传，就无需用户传instance了。
+  4. 解析onEvent这样事件规则，还有onAddFoo这种驼峰规则

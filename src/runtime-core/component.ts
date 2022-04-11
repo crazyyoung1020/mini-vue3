@@ -1,4 +1,5 @@
 import { shallowReadonly } from "../reactivity/reactive";
+import { emit } from "./componentEmit";
 import { initProps } from "./componentProps";
 import { PublicInstanceProxyHandlers } from "./componentPublicInstance";
 
@@ -7,8 +8,11 @@ export function createComponentInstance(vnode){
     vnode,
     type: vnode.type,
     setupState: {},
-    props: {}
+    props: {},
+    emit: ()=>{}
   };
+  // 这里要bind传入component，是因为用户触发emit的时候只会传事件名，而实际emit方法里我们需要用到instance，所以使用bind传入一下
+  component.emit = emit.bind(null, component) as any;
   return component;
 }
 
@@ -35,7 +39,9 @@ function setupStatefulComponent(instance){
   if(setup){
     // Function or Object，而且setup执行结果可能是函数也可能是对象
     // 这里要注意props是一个readonly，而其实它是一个shallowReadonly类型
-    const setupResult = setup(shallowReadonly(instance.props));
+    const setupResult = setup(shallowReadonly(instance.props), {
+      emit: instance.emit
+    });
 
     // 处理得到的结果，因为有可能是对象或者函数
     handleSetupResult(instance, setupResult);
