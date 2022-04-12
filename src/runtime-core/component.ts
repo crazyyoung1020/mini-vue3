@@ -2,6 +2,7 @@ import { shallowReadonly } from "../reactivity/reactive";
 import { emit } from "./componentEmit";
 import { initProps } from "./componentProps";
 import { PublicInstanceProxyHandlers } from "./componentPublicInstance";
+import { initSlots } from "./componentSlots";
 
 export function createComponentInstance(vnode){
   const component = {
@@ -9,6 +10,7 @@ export function createComponentInstance(vnode){
     type: vnode.type,
     setupState: {},
     props: {},
+    slots: {},
     emit: ()=>{}
   };
   // 这里要bind传入component，是因为用户触发emit的时候只会传事件名，而实际emit方法里我们需要用到instance，所以使用bind传入一下
@@ -19,7 +21,7 @@ export function createComponentInstance(vnode){
 export function setupComponent(instance){
   // TODO
   initProps(instance, instance.vnode.props)
-  // initSlots()
+  initSlots(instance, instance.vnode.children);
 
   // 执行组件实例的setup方法，将得到的对象挂载到组件实例上
   setupStatefulComponent(instance);

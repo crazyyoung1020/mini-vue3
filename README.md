@@ -168,3 +168,7 @@ tsconfig的lib:[],要把DOM和es6加上，否则写new Proxy会报错
   2. 可以将内部的emit函数挂载到Component的实例上一直带下去，方便传入setup
   3. 执行emit的时候需要去instance上找到用户注册的事件，然后触发，那这个instance可以内部通过component.emit.bind(null,component)这样去内部传，就无需用户传instance了。
   4. 解析onEvent这样事件规则，还有onAddFoo这种驼峰规则
+
+
+25. 实现slot
+  详细逻辑看example-componentSlot，实现了普通插槽，具名插槽，作用域插槽
