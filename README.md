@@ -172,3 +172,6 @@ tsconfig的lib:[],要把DOM和es6加上，否则写new Proxy会报错
 
 25. 实现slot
   详细逻辑看example-componentSlot，实现了普通插槽，具名插槽，作用域插槽
+
+26. 实现fragment和text节点
+  在渲染slots的时候，如果不做处理，我们需要在完成去包装一层div来包裹。我们在renderSlots的时候传入Fragment类型的节点，来告诉patch方法，这种类型的节点直接渲染子节点即可。另外text节点我们也需要处理，用document.createTextNode来实现。
