@@ -1,6 +1,7 @@
 import { isObject } from "../shared/index";
 import { ShapeFlags } from '../shared/ShapeFlags'
 import { createComponentInstance, setupComponent } from "./component";
+import { Fragment, Text } from "./vnode";
 
 export function render(vnode, container){
   // patch
@@ -13,15 +14,36 @@ function patch(vnode, container){
   // 判断vnode是不是一个element，如果是element那么就要去处理element
   // 如何去区分element类型和component类型？
   // 如果是element类型，type会是string，因为h()传入的第一个参数是标签名，这个就是vnode的type
-  const { shapeFlag } = vnode;
+  const { type, shapeFlag } = vnode;
   // 通过位运算的 与("&"),来判断shapeFlag是不是一个element类型
-  if(shapeFlag & ShapeFlags.ELEMENT){
-    processElement(vnode, container);
-  }else if(shapeFlag & ShapeFlags.STATEFUL_COMPONENT){
-    // TODO 这里是有疑问的，如果是自定义组件，那vnode.type应该也是string才对呀，就比如我render里面手写一个h渲染一个自定义组件，那这个判断是不是不太对？
-     // 去处理组件
-    processComponent(vnode, container);
+  // Fragment -> 只渲染children,不渲染包裹层
+  switch(type){
+    case Fragment:
+      processFragment(vnode, container);
+      break;
+    case Text:
+      processText(vnode, container);
+      break;
+    default:
+      if(shapeFlag & ShapeFlags.ELEMENT){
+        processElement(vnode, container);
+      }else if(shapeFlag & ShapeFlags.STATEFUL_COMPONENT){
+        // TODO 这里是有疑问的，如果是自定义组件，那vnode.type应该也是string才对呀，就比如我render里面手写一个h渲染一个自定义组件，那这个判断是不是不太对？
+         // 去处理组件
+        processComponent(vnode, container);
+      }
   }
+}
+
+function processText(vnode, container){
+  const { children } = vnode;
+  const textNode = ( vnode.el = document.createTextNode(children));
+  container.append(textNode);
+}
+
+function processFragment(vnode, container){
+  // Implement
+  mountChildren(vnode, container);
 }
 
 function processElement(vnode, container){
